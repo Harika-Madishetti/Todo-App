@@ -1,0 +1,38 @@
+body {
+    background-color: white;
+    text-align: -webkit-center;
+    font-family: Arial;
+    margin-bottom: 10px;
+    margin-top: 1px;
+}
+
+::-webkit-input-placeholder {
+    padding: 10px;
+    font-size: 30px;
+    border-color: black;
+    color: whitesmoke;
+    font-family: inherit;
+    font-weight: inherit;
+    font-style: italic;
+}
+
+input {
+    width: 25%;
+    padding: 15px;
+    position: relative;
+    border-radius: 2px;
+}
+
+h1 {
+    font-size: 45px;
+    font-weight: inherit;
+    font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+    color: peachpuff;
+}
+
+header {
+    height: 100%;
+    margin-top: 1px;
+    position: relative;
+
+}
