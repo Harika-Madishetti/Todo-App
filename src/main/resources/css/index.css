@@ -30,9 +30,21 @@ h1 {
     color: peachpuff;
 }
 
-header {
+.todolist .header input {
     height: 100%;
     margin-top: 1px;
     position: relative;
+}
 
+.todolist .theList li {
+    background-color: whitesmoke;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    list-style: none;
+    width: 25%;
+}
+
+ul.theList {
+    padding: 0;
 }
