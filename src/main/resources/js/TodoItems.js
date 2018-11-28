@@ -9,9 +9,11 @@ class TodoItems extends Component {
         var listItems = todoEntries.map(this.createTasks);
 
         return(
+
             <ul className="theList">
                 {listItems}
             </ul>
+
         );
     }
 }
