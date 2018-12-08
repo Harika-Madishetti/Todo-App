@@ -1,6 +1,6 @@
 import React from "react";
-import TodoItems from "./TodoItems";
 import firebase from "./firebase.js";
+import Header from "./Header";
 
 class TodoList extends React.Component {
     constructor(props) {
@@ -49,7 +49,7 @@ class TodoList extends React.Component {
         return (
                 <div>
                     <header className="header">
-                    <h1>todos</h1>
+                        <Header/>
                         <form onSubmit={this.addItem}>
                         <input className="new-todo" ref={(a) => this._inputElement = a}
                                placeholder="What needs to be done?">
@@ -57,16 +57,20 @@ class TodoList extends React.Component {
                 </form>
                     </header>
                     <section className="main">
+                        <input id="toggle-all" class="toggle-all" type="checkbox"/>
+                        <label htmlFor="toggle-all"/>
                         <ul className="todolist">
                             {
                                 this.state.items.map((item)=> {
                                     return(<li>
-                                            <input className="toggle"  type="checkbox"/>
-                                            <label></label>
+                                        <div className="view">
+                                            <input className="toggle"  type="checkbox" />
+                                            <label>{item.text}</label>
                                             <button className="delete" onClick={()=> this.deleteItem(item.key)}>
                                             </button>
-                                            {item.text}
-                                        </li>)
+                                        </div>
+                                        </li>
+                                    )
                                 })
                             }
                         </ul>
