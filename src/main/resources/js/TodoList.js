@@ -9,48 +9,69 @@ class TodoList extends React.Component {
             items:[],
         };
         this.addItem = this.addItem.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
     }
     addItem(event) {
         event.preventDefault();
         const itemsRef = firebase.database().ref('tasks');
-        if (this._inputElement.value != "") {
-            var newItem = {
-                text: this._inputElement.value,
-                key: Date.now()
+            if (this._inputElement.value != "") {
+                var newItem = {
+                    text: this._inputElement.value,
+                     key: Date.now()
+                }
+                itemsRef.push(newItem);
+                console.log("newItem here: " + newItem)
             }
-            itemsRef.push(newItem);
-            console.log("newItem here: "+newItem)
-        }
-        this._inputElement.value = "";
+            this._inputElement.value = "";
     }
     componentWillMount(){
+        console.log("in component will mount");
         const itemsRef = firebase.database().ref('tasks');
         itemsRef.on('value',(snapshot) => {
             let tasks = snapshot.val();
             let items = [];
             for(let item in tasks) {
                 items.push({
-                    key:tasks[item].key,
+                     key:item,
                     text:tasks[item].text
                 });
             }
             this.setState({
-                items:items,
+                items:  items,
             });
         });
     }
+    deleteItem(itemId) {
+        const itemRef = firebase.database().ref(`/tasks/${itemId}`);
+        itemRef.remove();
+    }
     render() {
         return (
-            <div className="todolist">
-                <div className="header"><h1>todos</h1>
-                    <form onSubmit={this.addItem}>
+                <div>
+                    <header className="header">
+                    <h1>todos</h1>
+                        <form onSubmit={this.addItem}>
                         <input className="new-todo" ref={(a) => this._inputElement = a}
                                placeholder="What needs to be done?">
                         </input>
-                    </form>
-                    <TodoItems entries ={this.state.items}/>
+                </form>
+                    </header>
+                    <section className="main">
+                        <ul className="todolist">
+                            {
+                                this.state.items.map((item)=> {
+                                    return(<li>
+                                            <input className="toggle"  type="checkbox"/>
+                                            <label></label>
+                                            <button className="delete" onClick={()=> this.deleteItem(item.key)}>
+                                            </button>
+                                            {item.text}
+                                        </li>)
+                                })
+                            }
+                        </ul>
+                    </section>
                 </div>
-            </div>
         );
     }
 }
