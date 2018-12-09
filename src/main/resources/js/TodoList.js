@@ -1,15 +1,18 @@
 import React from "react";
 import firebase from "./firebase.js";
 import Header from "./Header";
+import Footer from "./Footer";
 
 class TodoList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             items:[],
+            isCompleted:false,
         };
         this.addItem = this.addItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
+        this.toggleChange = this.toggleChange.bind(this);
     }
     addItem(event) {
         event.preventDefault();
@@ -17,7 +20,7 @@ class TodoList extends React.Component {
             if (this._inputElement.value != "") {
                 var newItem = {
                     text: this._inputElement.value,
-                     key: Date.now()
+                    isCompleted:false,
                 }
                 itemsRef.push(newItem);
                 console.log("newItem here: " + newItem)
@@ -29,21 +32,28 @@ class TodoList extends React.Component {
         const itemsRef = firebase.database().ref('tasks');
         itemsRef.on('value',(snapshot) => {
             let tasks = snapshot.val();
-            let items = [];
+            let newitems = [];
             for(let item in tasks) {
-                items.push({
+                newitems.push({
                      key:item,
-                    text:tasks[item].text
+                    text:tasks[item].text,
+                    isCompleted:tasks[item].isCompleted
                 });
             }
             this.setState({
-                items:  items,
+                items:newitems,
             });
         });
+        console.log("setstate" +this.state.items);
     }
-    deleteItem(itemId) {
-        const itemRef = firebase.database().ref(`/tasks/${itemId}`);
-        itemRef.remove();
+    deleteItem(key) {
+        const itemRef = firebase.database().ref('tasks');
+        itemRef.child(key).set(null);
+    }
+    toggleChange(key,isCompleted) {
+        console.log("toogleChange"+isCompleted);
+        const itemRef = firebase.database().ref('tasks');
+        itemRef.child(key).child('isCompleted').set(!isCompleted);
     }
     render() {
         return (
@@ -57,14 +67,14 @@ class TodoList extends React.Component {
                 </form>
                     </header>
                     <section className="main">
-                        <input id="toggle-all" class="toggle-all" type="checkbox"/>
+                        <input id="toggle-all" className="toggle-all" type="checkbox"/>
                         <label htmlFor="toggle-all"/>
                         <ul className="todolist">
                             {
                                 this.state.items.map((item)=> {
                                     return(<li>
                                         <div className="view">
-                                            <input className="toggle"  type="checkbox" />
+                                            <input className="toggle"  type="checkbox" onChange={()=>this.toggleChange(item.key,item['isCompleted'])} />
                                             <label>{item.text}</label>
                                             <button className="delete" onClick={()=> this.deleteItem(item.key)}>
                                             </button>
@@ -75,6 +85,7 @@ class TodoList extends React.Component {
                             }
                         </ul>
                     </section>
+                    <Footer/>
                 </div>
         );
     }

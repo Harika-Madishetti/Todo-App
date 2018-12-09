@@ -1,0 +1,28 @@
+import React from "react";
+
+class Footer extends React.Component{
+    render() {
+        return(
+            <footer className="footer">
+                <span className="todo-count">
+                </span>
+                <ul className="filters">
+                    <li>
+                        <a
+                           href="#/" onClick={this.props.SelectAll}>All</a>
+
+                    </li>
+                    <li>
+                        <a
+                        href="#/active">Active</a>
+                    </li>
+                    <li>
+                        <a
+                            href="#/Completed">Completed</a>
+                    </li>
+                </ul>
+            </footer>
+        )
+    }
+}
+export default Footer;
