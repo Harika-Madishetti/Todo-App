@@ -9,16 +9,16 @@ class Footer extends React.Component{
                 <ul className="filters">
                     <li>
                         <a
-                           href="#/" onClick={this.props.SelectAll}>All</a>
+                           href="#/" onClick={this.props.selectAll}>All</a>
 
                     </li>
                     <li>
                         <a
-                        href="#/active">Active</a>
+                        href="#/active" onClick={this.props.selectActive}>Active</a>
                     </li>
                     <li>
                         <a
-                            href="#/Completed">Completed</a>
+                            href="#/Completed" onClick={this.props.selectCompleted}>Completed</a>
                     </li>
                 </ul>
             </footer>
