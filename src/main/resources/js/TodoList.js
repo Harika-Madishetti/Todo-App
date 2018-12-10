@@ -8,8 +8,8 @@ class TodoList extends React.Component {
         super(props);
         this.state = {
             items:[],
-            isCompleted:false,
             displayMode:'all',
+            checked:false,
         };
         this.addItem = this.addItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
@@ -55,10 +55,14 @@ class TodoList extends React.Component {
         const itemRef = firebase.database().ref('tasks');
         itemRef.child(key).set(null);
     }
-    toggleChange(key,isCompleted) {
-        console.log("toogleChange"+isCompleted);
+    toggleChange(item) {
+        console.log("toogleChange"+item.key);
         const itemRef = firebase.database().ref('tasks');
-        itemRef.child(key).child('isCompleted').set(!isCompleted);
+        var toggle = {
+                text : item.text,
+                isCompleted : !item.isCompleted
+        }
+        itemRef.child(item.key).update(toggle);
     }
     selectAll(){
         console.log("selected");
@@ -83,7 +87,6 @@ class TodoList extends React.Component {
         let filteredItems=[];
         if(this.state.displayMode==='all') {
             filteredItems = this.state.items;
-            console.log("getFilteredItemsinside");
         }
         else if(this.state.displayMode === 'active'){
             console.log("activemode")
@@ -101,7 +104,22 @@ class TodoList extends React.Component {
             });
         }
         return filteredItems;
-        console.log("fil" +filteredItems);
+    }
+    toggleAll(){
+        const itemRef = firebase.database().ref('tasks');
+        this.state.items.map((item)=>{
+            if(item.isCompleted === this.state.checked){
+                var temp ={
+                    text : item.text,
+                    isCompleted : !item.isCompleted
+                }
+                itemRef.child(item.key).update(temp);
+            }
+        });
+        this.setState({
+            checked:!this.state.checked
+        });
+
     }
     render() {
         return (<div>
@@ -114,14 +132,19 @@ class TodoList extends React.Component {
                 </form>
             </header>
             <section className="main">
-                <input id="toggle-all" className="toggle-all" type="checkbox"/>
-                <label htmlFor="toggle-all"/>
+                {
+                    this.state.items.length >0 &&
+                    <input id="toggle-all" className="toggle-all" type="checkbox" checked={this.state.checked}
+                            onChange={()=>this.toggleAll()}
+                    />}
+                    <label htmlFor="toggle-all"/>
+
                 <ul className="todolist">
                     {
                         this.getFilteredItems().map((item)=> {
                         return(<li>
                         <div className="view">
-                        <input className="toggle"  type="checkbox" onChange={() => this.toggleChange(item.key, item['isCompleted'])}/>
+                        <input className="toggle"  type="checkbox" checked={item.isCompleted} onChange={() => this.toggleChange(item)}/>
                         <label>{item.text}</label>
                         <button className="delete" onClick={() => this.deleteItem(item.key)}>
                         </button>
@@ -132,9 +155,10 @@ class TodoList extends React.Component {
                     }
                 </ul>
             </section>
+            {this.state.items.length > 0 &&
             <Footer selectAll={this.selectAll}
                     selectActive={this.selectActive}
-                    selectCompleted={this.selectCompleted}/>
+                    selectCompleted={this.selectCompleted}/>}
         </div>);
     }
 }

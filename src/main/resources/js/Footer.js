@@ -10,7 +10,6 @@ class Footer extends React.Component{
                     <li>
                         <a
                            href="#/" onClick={this.props.selectAll}>All</a>
-
                     </li>
                     <li>
                         <a
