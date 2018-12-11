@@ -170,8 +170,9 @@ class TodoList extends React.Component {
                     selectActive={this.selectActive}
                     selectCompleted={this.selectCompleted}
                     completedCount={this.completedCount}
-                    onClearCompleted={this.onClearCompleted}/>}
-
+                    onClearCompleted={this.onClearCompleted}
+                    entries={this.state.items}/>
+            }
         </div>);
     }
 }

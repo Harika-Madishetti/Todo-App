@@ -1,9 +1,10 @@
 import React from "react";
 
 class Footer extends React.Component{
-
-    render() {
+    render(){
         var clearButton = null;
+        var unCheckeditems = this.props.entries.length - this.props.completedCount();
+        console.log("items : "+unCheckeditems);
         if (this.props.completedCount() > 0) {
             clearButton = (
                 <button
@@ -15,8 +16,11 @@ class Footer extends React.Component{
         }
         return(
             <footer className="footer">
+                { this.props.completedCount() > 0 &&
                 <span className="todo-count">
-                </span>
+                    <strong>{unCheckeditems}
+                    </strong> item{ unCheckeditems > 1 && 's'} left
+                </span>}
                 <ul className="filters">
                     <li>
                         <a
