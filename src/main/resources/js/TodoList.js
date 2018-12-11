@@ -18,6 +18,8 @@ class TodoList extends React.Component {
         this.selectAll = this.selectAll.bind(this);
         this.selectActive = this.selectActive.bind(this);
         this.selectCompleted = this.selectCompleted.bind(this);
+        this.completedCount=this.completedCount.bind(this);
+        this.onClearCompleted = this.onClearCompleted.bind(this);
     }
     addItem(event) {
         event.preventDefault();
@@ -28,7 +30,6 @@ class TodoList extends React.Component {
                     isCompleted:false,
                 }
                 itemsRef.push(newItem);
-                console.log("newItem here: " + newItem)
             }
             this._inputElement.value = "";
     }
@@ -49,14 +50,12 @@ class TodoList extends React.Component {
                 items:newitems,
             });
         });
-        console.log("setstate" +this.state.items);
     }
     deleteItem(key) {
         const itemRef = firebase.database().ref('tasks');
-        itemRef.child(key).set(null);
+        itemRef.child(key).remove();
     }
     toggleChange(item) {
-        console.log("toogleChange"+item.key);
         const itemRef = firebase.database().ref('tasks');
         var toggle = {
                 text : item.text,
@@ -83,13 +82,11 @@ class TodoList extends React.Component {
         });
     }
     getFilteredItems(){
-        console.log("getFilteredItems");
         let filteredItems=[];
         if(this.state.displayMode==='all') {
             filteredItems = this.state.items;
         }
         else if(this.state.displayMode === 'active'){
-            console.log("activemode")
             this.state.items.forEach((item)=> {
                 if(!(item.isCompleted)){
                     filteredItems.push(item);
@@ -119,7 +116,22 @@ class TodoList extends React.Component {
         this.setState({
             checked:!this.state.checked
         });
-
+    }
+    completedCount(){
+        var count=0;
+        this.state.items.forEach((item)=>{
+            if(item.isCompleted){
+                count++;
+            }
+        });
+        return count;
+    }
+    onClearCompleted(){
+        this.state.items.forEach((item)=>{
+            if(item.isCompleted){
+                this.deleteItem(item.key)
+            }
+        });
     }
     render() {
         return (<div>
@@ -135,10 +147,8 @@ class TodoList extends React.Component {
                 {
                     this.state.items.length >0 &&
                     <input id="toggle-all" className="toggle-all" type="checkbox" checked={this.state.checked}
-                            onChange={()=>this.toggleAll()}
-                    />}
+                            onChange={()=>this.toggleAll()}/>}
                     <label htmlFor="toggle-all"/>
-
                 <ul className="todolist">
                     {
                         this.getFilteredItems().map((item)=> {
@@ -158,7 +168,10 @@ class TodoList extends React.Component {
             {this.state.items.length > 0 &&
             <Footer selectAll={this.selectAll}
                     selectActive={this.selectActive}
-                    selectCompleted={this.selectCompleted}/>}
+                    selectCompleted={this.selectCompleted}
+                    completedCount={this.completedCount}
+                    onClearCompleted={this.onClearCompleted}/>}
+
         </div>);
     }
 }

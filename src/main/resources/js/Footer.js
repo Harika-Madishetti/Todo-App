@@ -1,7 +1,18 @@
 import React from "react";
 
 class Footer extends React.Component{
+
     render() {
+        var clearButton = null;
+        if (this.props.completedCount() > 0) {
+            clearButton = (
+                <button
+                    className="clear-completed"
+                    onClick={this.props.onClearCompleted}>
+                    Clear completed
+                </button>
+            );
+        }
         return(
             <footer className="footer">
                 <span className="todo-count">
@@ -20,6 +31,7 @@ class Footer extends React.Component{
                             href="#/Completed" onClick={this.props.selectCompleted}>Completed</a>
                     </li>
                 </ul>
+                {clearButton}
             </footer>
         )
     }
