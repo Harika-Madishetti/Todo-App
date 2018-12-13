@@ -159,6 +159,7 @@ class TodoList extends React.Component {
                         <button className="delete" onClick={() => this.deleteItem(item.key)}>
                         </button>
                         </div>
+                                <input className="edit" type="text" value={this.state.item.text}/>
                         </li>
                         )
                     })

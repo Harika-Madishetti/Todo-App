@@ -40,6 +40,9 @@ button {
     text-align: center;
     color: rgba(175, 47, 47, 0.15);
 }
+.todolist li .edit {
+    display: none;
+}
 .new-todo, .edit {
     position: relative;
     margin: 0;

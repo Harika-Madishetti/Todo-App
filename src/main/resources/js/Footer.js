@@ -4,7 +4,7 @@ class Footer extends React.Component{
     render(){
         var clearButton = null;
         var unCheckeditems = this.props.entries.length - this.props.completedCount();
-        console.log("items : "+unCheckeditems);
+
         if (this.props.completedCount() > 0) {
             clearButton = (
                 <button
